@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LihatYuk</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0b0f;color:#fff;font-family:Arial,sans-serif}
+header{height:64px;padding:0 6%;display:flex;align-items:center;background:#111116;position:sticky;top:0}
+.logo{font-size:25px;font-weight:800;color:#ff1744}
+nav{margin-left:35px;display:flex;gap:25px;color:#bbb}
+nav a{color:inherit;text-decoration:none}
+main{padding:60px 6%}
+.hero{min-height:420px;display:flex;align-items:center}
+h1{font-size:clamp(42px,7vw,72px);margin:0 0 20px}
+p{color:#aaa;font-size:17px;line-height:1.6;max-width:600px}
+button{border:0;border-radius:7px;padding:14px 24px;background:#ff1744;color:#fff;font-weight:bold;font-size:15px}
+section{margin-top:40px}.title{font-size:22px;margin-bottom:18px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px}
+.card{background:#17171d;border-radius:8px;overflow:hidden}
+.poster{height:230px;background:#25252d}
+.info{padding:12px}.info b{display:block}.info small{color:#777}
+footer{margin-top:80px;padding:30px;text-align:center;color:#666;border-top:1px solid #222}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">LihatYuk</div>
+<nav>
+<a href="#">Home</a>
+<a href="#film">Film</a>
+<a href="#series">Series</a>
+<a href="#live">Live</a>
+</nav>
+</header>
+
+<main>
+<div class="hero">
+<div>
+<h1>Semua tontonan<br>di satu tempat.</h1>
+<p>Selamat datang di LihatYuk. Temukan film, series, video, dan live streaming favoritmu.</p>
+<button onclick="alert('Player LihatYuk')">▶ Mulai Nonton</button>
+</div>
+</div>
+
+<section id="film">
+<div class="title">🔥 Sedang Populer</div>
+<div class="cards">
+<div class="card"><div class="poster"></div><div class="info"><b>Konten Pilihan</b><small>Film • 2026</small></div></div>
+<div class="card"><div class="poster"></div><div class="info"><b>Movie Terbaru</b><small>Film • 2026</small></div></div>
+<div class="card"><div class="poster"></div><div class="info"><b>LihatYuk Picks</b><small>Series • 2026</small></div></div>
+</div>
+</section>
+
+<section id="series">
+<div class="title">🎬 Series Terbaru</div>
+<div class="cards">
+<div class="card"><div class="poster"></div><div class="info"><b>Series 01</b><small>Series • 2026</small></div></div>
+<div class="card"><div class="poster"></div><div class="info"><b>Series 02</b><small>Series • 2026</small></div></div>
+</div>
+</section>
+
+<section id="live">
+<div class="title">🔴 Live Streaming</div>
+<p>Belum ada siaran live.</p>
+</section>
+</main>
+
+<footer>© 2026 LihatYuk</footer>
+</body>
+</html>
