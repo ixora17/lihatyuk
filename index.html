@@ -1,483 +1,1744 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lihatyuk — Nonton Streaming Pilihan</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+
+<title>LihatYuk</title>
+
 <style>
-  :root{
-    --bg:#08090D; --bg-soft:#111420; --bg-card:#151926; --bg-card-hi:#1B2030;
-    --bulb:#FFB84D; --bulb-soft:#FFD08A; --velvet:#E14D63;
-    --cream:#F5F2EC; --muted:#8891A3; --line:rgba(255,255,255,.07);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{ background:var(--bg); color:var(--cream); font-family:'Work Sans', sans-serif; min-height:100vh; }
-  .display{font-family:'Bebas Neue', sans-serif; letter-spacing:.035em;}
-  ::selection{ background:var(--bulb); color:var(--bg); }
-  img{ display:block; }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-  body::before{
-    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+:root{
+    --bg:#050505;
+    --card:#111;
+    --red:#e50914;
+    --white:#fff;
+    --gray:#999;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:70px;
+    padding:0 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:1000;
+
+    background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,.95),
+        rgba(0,0,0,.4),
+        transparent
+    );
+
+    transition:.3s;
+}
+
+.header.scrolled{
+    background:rgba(5,5,5,.97);
+    backdrop-filter:blur(15px);
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:var(--red);
+}
+
+.nav{
+    display:flex;
+    gap:28px;
+}
+
+.nav a{
+    color:#bbb;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.nav a:hover,
+.nav a.active{
+    color:white;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.search-btn{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.profile{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:linear-gradient(
+        135deg,
+        #e50914,
+        #710006
+    );
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+
+/* ================= HERO ================= */
+
+.hero{
+    height:88vh;
+    min-height:600px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    padding:0 5%;
+    overflow:hidden;
+}
+
+.hero-bg{
+    position:absolute;
+    inset:0;
+
     background:
-      radial-gradient(ellipse 1000px 560px at 50% -8%, rgba(255,184,77,.12), transparent 62%),
-      radial-gradient(ellipse 800px 560px at 105% 15%, rgba(225,77,99,.09), transparent 60%),
-      radial-gradient(ellipse 700px 500px at -5% 60%, rgba(255,184,77,.05), transparent 55%);
-  }
+        linear-gradient(
+            90deg,
+            #050505 0%,
+            rgba(5,5,5,.82) 30%,
+            rgba(5,5,5,.25) 70%,
+            rgba(5,5,5,.7) 100%
+        ),
+        linear-gradient(
+            to top,
+            #050505 0%,
+            transparent 35%
+        ),
+        url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=2000&q=90")
+        center/cover;
 
-  /* ===== HEADER ===== */
-  header{
-    position:sticky; top:0; z-index:50; background:rgba(8,9,13,.78); backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line); padding:16px 30px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .logo{font-family:'Bebas Neue'; font-size:25px; letter-spacing:.06em; color:var(--cream); display:flex; align-items:center; gap:2px;}
-  .logo .bulb-dot{ width:6px; height:6px; border-radius:50%; background:var(--bulb); box-shadow:0 0 10px 1px var(--bulb); margin-left:5px; margin-bottom:12px; }
-  .logo span{color:var(--bulb);}
-  .search-box{
-    background:var(--bg-soft); border:1px solid var(--line); border-radius:999px;
-    padding:9px 18px; display:flex; align-items:center; gap:10px; width:min(340px, 42vw); transition:.15s;
-  }
-  .search-box:focus-within{ border-color:var(--bulb); box-shadow:0 0 0 3px rgba(255,184,77,.1); }
-  .search-box input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Work Sans'; font-size:14px; width:100%; }
-  .search-box input::placeholder{color:var(--muted);}
+    transform:scale(1.02);
+}
 
-  /* ===== HERO ===== */
-  .hero{ position:relative; z-index:1; padding:60px 24px 0; text-align:center; overflow:hidden; }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
-    color:var(--bulb-soft); margin-bottom:20px; font-weight:600;
-  }
-  .eyebrow::before, .eyebrow::after{ content:''; width:26px; height:1px; background:linear-gradient(90deg, transparent, var(--bulb)); }
-  .eyebrow::after{ background:linear-gradient(90deg, var(--bulb), transparent); }
-  .marquee-frame{ display:inline-block; padding:26px 52px; border:2px solid var(--bulb); border-radius:14px; position:relative; box-shadow:0 0 70px rgba(255,184,77,.10); }
-  .marquee-frame::before, .marquee-frame::after{
-    content:''; position:absolute; inset:-11px; border-radius:18px;
-    background-image: radial-gradient(circle, var(--bulb) 2.3px, transparent 2.7px);
-    background-size: 23px 23px; background-position: 0 0;
-    animation: chase 1.5s linear infinite; opacity:.85; pointer-events:none;
-  }
-  .marquee-frame::after{ animation-delay:.75s; opacity:.3; }
-  @keyframes chase{ 0%{ background-position: 0 0; } 100%{ background-position: 23px 23px; } }
-  .hero h1{ font-size:clamp(38px, 8vw, 84px); color:var(--cream); line-height:.95; }
-  .hero h1 span{color:var(--bulb);}
-  .hero p{ margin-top:16px; color:var(--muted); font-size:15px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.6; }
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:620px;
+    margin-top:70px;
+}
 
-  /* ===== FEATURED ===== */
-  .featured-wrap{ position:relative; z-index:1; max-width:1200px; margin:52px auto 0; padding:0 24px; }
-  .section-label{ display:flex; align-items:baseline; gap:10px; margin-bottom:16px; }
-  .section-label .dash{ width:18px; height:3px; background:var(--bulb); border-radius:2px; }
-  .section-label h3{ font-family:'Bebas Neue'; font-size:22px; letter-spacing:.03em; color:var(--cream); }
-  .featured-card{
-    position:relative; border-radius:18px; overflow:hidden; cursor:pointer;
-    border:1px solid var(--line); aspect-ratio:21/9; background:#000;
-    box-shadow:0 20px 50px rgba(0,0,0,.45);
-  }
-  .featured-card img{ width:100%; height:100%; object-fit:cover; transition:.5s transform; }
-  .featured-card:hover img{ transform:scale(1.03); }
-  .featured-card::after{
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(0deg, rgba(8,9,13,.92) 5%, rgba(8,9,13,.15) 55%, transparent 80%);
-  }
-  .featured-info{ position:absolute; left:0; right:0; bottom:0; padding:28px 32px; z-index:2; text-align:left; }
-  .featured-badge{ display:inline-block; background:var(--bulb); color:var(--bg); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; padding:5px 12px; border-radius:999px; margin-bottom:12px; }
-  .featured-info .ftitle{ font-family:'Bebas Neue'; font-size:clamp(26px,4vw,42px); letter-spacing:.02em; color:var(--cream); line-height:1.05; max-width:80%; }
-  .featured-info .fcat{ margin-top:8px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
-  .featured-play{
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
-    width:64px; height:64px; opacity:0; transition:.25s;
-  }
-  .featured-card:hover .featured-play{ opacity:1; }
+.badge{
+    display:inline-block;
+    background:rgba(229,9,20,.15);
+    border:1px solid rgba(229,9,20,.4);
+    color:#ff6268;
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:18px;
+}
 
-  /* ===== TABS ===== */
-  .tabs-wrap{ position:relative; z-index:1; max-width:1200px; margin:44px auto 0; }
-  .tabs{ display:flex; gap:10px; overflow-x:auto; padding:0 24px 20px; scrollbar-width:none; }
-  .tabs::-webkit-scrollbar{display:none;}
-  .tab{
-    flex:none; padding:9px 20px; border-radius:999px; border:1px solid var(--line);
-    color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:.15s;
-  }
-  .tab:hover{ border-color:var(--bulb); color:var(--cream); }
-  .tab.active{ background:var(--bulb); border-color:var(--bulb); color:var(--bg); }
+.hero h1{
+    font-size:clamp(48px,7vw,82px);
+    line-height:.94;
+    letter-spacing:-4px;
+    margin-bottom:20px;
+}
 
-  /* ===== GRID ===== */
-  .grid-wrap{ position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 24px; }
-  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:22px; padding:8px 0 90px; }
-  .card{
-    background:var(--bg-card); border-radius:12px; overflow:hidden; cursor:pointer;
-    border:1px solid var(--line); transition:.25s transform, .25s border-color, .25s box-shadow, .25s background;
-  }
-  .card:hover{ transform:translateY(-5px); border-color:var(--bulb); box-shadow:0 16px 36px rgba(0,0,0,.4); background:var(--bg-card-hi); }
-  .thumb{ position:relative; aspect-ratio:16/9; background:#000; overflow:hidden; }
-  .thumb img{ width:100%; height:100%; object-fit:cover; transition:.4s transform; }
-  .card:hover .thumb img{ transform:scale(1.06); }
-  .thumb::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(0,0,0,.6) 100%); }
-  .cat-chip{
-    position:absolute; top:10px; left:10px; z-index:2; background:rgba(8,9,13,.7); backdrop-filter:blur(4px);
-    color:var(--bulb-soft); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
-    padding:4px 10px; border-radius:999px; border:1px solid rgba(255,184,77,.25);
-  }
-  .play-badge{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:2; opacity:0; transition:.2s; }
-  .card:hover .play-badge{ opacity:1; }
-  .play-badge svg{ width:44px; height:44px; filter:drop-shadow(0 2px 8px rgba(0,0,0,.6)); }
-  .card-info{ padding:13px 15px 16px; }
-  .card-info .title{ font-size:14px; font-weight:600; color:var(--cream); line-height:1.35; }
-  .empty-state{ color:var(--muted); grid-column:1/-1; text-align:center; padding:60px 20px; font-size:14px; }
+.hero h1 span{
+    color:var(--red);
+}
 
-  /* ===== MODAL ===== */
-  .modal{ position:fixed; inset:0; background:rgba(4,5,7,.92); display:none; align-items:center; justify-content:center; z-index:200; padding:24px; backdrop-filter:blur(6px); }
-  .modal.open{ display:flex; animation:fadeIn .2s ease; }
-  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
-  .modal-box{ width:min(920px, 100%); }
-  .modal-box .frame-wrap{ position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid rgba(255,184,77,.3); box-shadow:0 24px 70px rgba(0,0,0,.65); }
-  .modal-box iframe{ width:100%; height:100%; border:0; }
-  .modal-close{
-    display:block; margin:16px auto 0; color:var(--muted); background:none; border:1px solid var(--line);
-    border-radius:999px; padding:9px 22px; cursor:pointer; font-family:'Work Sans'; font-size:13px; transition:.15s;
-  }
-  .modal-close:hover{ color:var(--cream); border-color:var(--bulb); }
+.meta{
+    display:flex;
+    gap:15px;
+    color:#ddd;
+    font-size:14px;
+    margin-bottom:18px;
+}
 
-  footer{ position:relative; z-index:1; text-align:center; padding:30px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
-  footer a{ color:var(--muted); cursor:pointer; }
-  footer a:hover{ color:var(--bulb); }
+.description{
+    color:#bbb;
+    line-height:1.6;
+    max-width:560px;
+    font-size:15px;
+    margin-bottom:25px;
+}
 
-  @media (max-width:640px){
-    header{ padding:14px 18px; } .search-box{ width:120px; padding:8px 12px; }
-    .hero{ padding:44px 18px 0; } .marquee-frame{ padding:20px 24px; }
-    .featured-wrap{ margin-top:38px; } .featured-card{ aspect-ratio:16/12; }
-    .featured-info{ padding:20px; } .featured-info .ftitle{ max-width:100%; }
-    .grid{ padding:8px 0 70px; gap:14px; }
-  }
+.buttons{
+    display:flex;
+    gap:12px;
+}
 
-  /* ===== ADMIN LAYER ===== */
-  #adminOverlay{ position:fixed; inset:0; background:var(--bg); z-index:300; display:none; overflow-y:auto; }
-  #adminOverlay.open{ display:block; }
-  .admin-header{ padding:18px 24px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--bg); z-index:2; }
-  .admin-header .logo{ font-size:22px; }
-  a.exit-admin{ color:var(--muted); font-size:13px; border:1px solid var(--line); padding:7px 16px; border-radius:999px; cursor:pointer; }
-  a.exit-admin:hover{ color:var(--cream); border-color:var(--bulb); }
-  .login-wrap{ max-width:340px; margin:90px auto; padding:0 20px; text-align:center; }
-  .a-card{ background:var(--bg-soft); border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:22px; text-align:left; }
-  .a-card h2{ font-family:'Bebas Neue'; font-size:20px; margin-bottom:14px; letter-spacing:.03em; }
-  .a-wrap{ max-width:640px; margin:0 auto; padding:32px 20px 90px; }
-  .a-card label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; margin-top:14px; text-transform:uppercase; letter-spacing:.04em; }
-  .a-card label:first-of-type{ margin-top:0; }
-  .a-card input[type=text], .a-card input[type=password]{
-    width:100%; padding:11px 13px; background:var(--bg); border:1px solid var(--line);
-    border-radius:8px; color:var(--cream); font-family:'Work Sans'; font-size:14px; outline:none;
-  }
-  .a-card input:focus{ border-color:var(--bulb); }
-  .a-btn{ margin-top:20px; width:100%; padding:12px; border:none; border-radius:8px; background:var(--bulb); color:var(--bg); font-weight:700; font-size:14px; cursor:pointer; }
-  .a-btn:hover{ opacity:.9; }
-  .a-msg{ padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; display:none; }
-  .a-msg.show{ display:block; }
-  .a-msg.error{ background:rgba(225,77,99,.15); color:#ff9aa8; border:1px solid rgba(225,77,99,.4); }
-  .a-msg.success{ background:rgba(46,139,87,.2); color:#7fe8a8; border:1px solid rgba(46,139,87,.4); }
-  .a-row{ display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); gap:12px; }
-  .a-row:last-child{ border-bottom:none; }
-  .a-row .a-thumb{ width:64px; height:36px; border-radius:6px; overflow:hidden; flex:none; background:#000; }
-  .a-row .a-thumb img{ width:100%; height:100%; object-fit:cover; }
-  .a-row .a-info{ flex:1; min-width:0; }
-  .a-row .a-info .a-t{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .a-row .a-info .a-c{ font-size:11px; color:var(--velvet); text-transform:uppercase; font-weight:700; margin-top:2px; }
-  .a-del{ flex:none; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:12px; padding:7px 12px; border-radius:999px; cursor:pointer; }
-  .a-del:hover{ color:#ff9aa8; border-color:#ff9aa8; }
-  .a-empty{ color:var(--muted); font-size:13px; padding:8px 0; }
-  .a-note{ font-size:12px; color:var(--muted); line-height:1.7; margin-top:6px; }
-  .a-note b{ color:var(--bulb-soft); }
+.btn{
+    border:0;
+    padding:13px 22px;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-watch{
+    background:white;
+    color:black;
+}
+
+.btn-add{
+    background:rgba(255,255,255,.14);
+    color:white;
+    backdrop-filter:blur(10px);
+}
+
+
+/* ================= CONTENT ================= */
+
+main{
+    position:relative;
+    z-index:5;
+    margin-top:-80px;
+}
+
+.section{
+    padding:0 5%;
+    margin-bottom:45px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.section-title{
+    font-size:21px;
+    font-weight:800;
+}
+
+.see-all{
+    color:#888;
+    font-size:13px;
+}
+
+
+/* ================= CARDS ================= */
+
+.row{
+    display:flex;
+    gap:15px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:5px;
+}
+
+.row::-webkit-scrollbar{
+    display:none;
+}
+
+.card{
+    flex:0 0 170px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:scale(1.04);
+}
+
+.poster{
+    width:100%;
+    aspect-ratio:2/3;
+    background:#151515;
+    border-radius:9px;
+    overflow:hidden;
+    position:relative;
+}
+
+.poster img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.poster::after{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.65),
+            transparent 50%
+        );
+}
+
+.rating{
+    position:absolute;
+    top:9px;
+    right:9px;
+    z-index:2;
+
+    background:rgba(0,0,0,.75);
+    padding:5px 7px;
+    border-radius:5px;
+
+    font-size:11px;
+}
+
+.card-info{
+    padding-top:9px;
+}
+
+.card-title{
+    font-size:14px;
+    font-weight:bold;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.card-meta{
+    color:#777;
+    font-size:11px;
+    margin-top:5px;
+}
+
+
+/* ================= LANDSCAPE CARDS ================= */
+
+.landscape .card{
+    flex-basis:260px;
+}
+
+.landscape .poster{
+    aspect-ratio:16/9;
+}
+
+
+/* ================= SEARCH ================= */
+
+.search{
+    position:fixed;
+    inset:0;
+    z-index:2000;
+
+    display:none;
+
+    background:rgba(0,0,0,.95);
+    backdrop-filter:blur(20px);
+
+    padding:90px 6%;
+}
+
+.search.active{
+    display:block;
+}
+
+.search-top{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.search-input{
+    flex:1;
+
+    background:#151515;
+    border:1px solid #333;
+
+    color:white;
+
+    padding:17px 20px;
+    border-radius:10px;
+
+    outline:none;
+
+    font-size:16px;
+}
+
+.close-search{
+    font-size:30px;
+    cursor:pointer;
+}
+
+.search-results{
+    margin-top:30px;
+}
+
+
+/* ================= PLAYER ================= */
+
+.player{
+    position:fixed;
+    inset:0;
+
+    z-index:3000;
+
+    background:#000;
+
+    display:none;
+}
+
+.player.active{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.video-container{
+    width:100%;
+    height:100%;
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.video-container video{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:#000;
+}
+
+.player-logo{
+    position:absolute;
+    top:25px;
+    left:30px;
+
+    font-size:22px;
+    font-weight:900;
+
+    z-index:10;
+    pointer-events:none;
+}
+
+.player-logo span{
+    color:var(--red);
+}
+
+.close-player{
+    position:absolute;
+    top:20px;
+    right:25px;
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:rgba(0,0,0,.65);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:25px;
+
+    cursor:pointer;
+
+    z-index:20;
+}
+
+
+/* ================= MOBILE NAV ================= */
+
+.mobile-nav{
+    display:none;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:800px){
+
+    .header{
+        height:60px;
+        padding:0 18px;
+    }
+
+    .logo{
+        font-size:22px;
+    }
+
+    .nav{
+        display:none;
+    }
+
+    .hero{
+        height:72vh;
+        min-height:540px;
+
+        padding:0 20px;
+        align-items:flex-end;
+        padding-bottom:90px;
+    }
+
+    .hero-bg{
+        background:
+            linear-gradient(
+                to top,
+                #050505 0%,
+                rgba(5,5,5,.15) 60%,
+                rgba(5,5,5,.25)
+            ),
+            url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=90")
+            center/cover;
+    }
+
+    .hero-content{
+        margin:0;
+    }
+
+    .hero h1{
+        font-size:48px;
+        letter-spacing:-2px;
+    }
+
+    .description{
+        font-size:13px;
+
+        display:-webkit-box;
+        -webkit-line-clamp:3;
+        -webkit-box-orient:vertical;
+
+        overflow:hidden;
+    }
+
+    main{
+        margin-top:-35px;
+    }
+
+    .section{
+        padding:0 18px;
+        margin-bottom:35px;
+    }
+
+    .section-title{
+        font-size:18px;
+    }
+
+    .card{
+        flex-basis:130px;
+    }
+
+    .landscape .card{
+        flex-basis:220px;
+    }
+
+    .mobile-nav{
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+
+        height:65px;
+
+        background:rgba(8,8,8,.96);
+        backdrop-filter:blur(20px);
+
+        border-top:1px solid #222;
+
+        z-index:1500;
+
+        display:flex;
+        align-items:center;
+        justify-content:space-around;
+    }
+
+    .mobile-nav-item{
+        color:#777;
+        font-size:10px;
+        text-align:center;
+    }
+
+    .mobile-nav-item.active{
+        color:white;
+    }
+
+    .mobile-icon{
+        display:block;
+        font-size:20px;
+        margin-bottom:3px;
+    }
+}
 </style>
 </head>
+
+
 <body>
 
-<!-- ============ VERSI UMUM (PUBLIK) ============ -->
-<header>
-  <div class="logo">LIHAT<span>YUK</span><span class="bulb-dot"></span></div>
-  <div class="search-box">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8891A3" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input id="searchInput" type="text" placeholder="Cari video...">
-  </div>
+
+<!-- ================= HEADER ================= -->
+
+<header class="header" id="header">
+
+    <div class="logo">
+        Lihat<span>Yuk</span>
+    </div>
+
+    <nav class="nav">
+
+        <a href="#" class="active">
+            Home
+        </a>
+
+        <a href="#film">
+            Film
+        </a>
+
+        <a href="#series">
+            Series
+        </a>
+
+        <a href="#popular">
+            Populer
+        </a>
+
+    </nav>
+
+    <div class="header-right">
+
+        <div
+            class="search-btn"
+            onclick="openSearch()"
+        >
+            ⌕
+        </div>
+
+        <div class="profile">
+            E
+        </div>
+
+    </div>
+
 </header>
 
+
+<!-- ================= HERO ================= -->
+
 <section class="hero">
-  <div class="eyebrow">Nonton Kapan Saja</div>
-  <div class="marquee-frame"><h1 class="display">SEDANG <span>TAYANG</span></h1></div>
-  <p>Kumpulan video pilihan dari berbagai kategori — tinggal klik, langsung diputar di sini.</p>
+
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+
+        <div class="badge">
+            🔥 PILIHAN LIHATYUK
+        </div>
+
+        <h1>
+            WATCH.<br>
+            RELAX.<br>
+            <span>ENJOY.</span>
+        </h1>
+
+        <div class="meta">
+
+            <span>2026</span>
+            <span>•</span>
+            <span>13+</span>
+            <span>•</span>
+            <span>2h 08m</span>
+            <span>•</span>
+            <b>★ 9.1</b>
+
+        </div>
+
+        <p class="description">
+
+            Temukan film dan series favoritmu
+            dalam satu tempat. Nikmati pengalaman
+            streaming dengan tampilan modern,
+            cepat dan nyaman di LihatYuk.
+
+        </p>
+
+        <div class="buttons">
+
+            <button
+                class="btn btn-watch"
+                onclick="openPlayer()"
+            >
+                ▶ Mulai Nonton
+            </button>
+
+            <button
+                class="btn btn-add"
+            >
+                ＋ Daftar Saya
+            </button>
+
+        </div>
+
+    </div>
+
 </section>
 
-<div class="featured-wrap" id="featuredWrap"></div>
 
-<div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
-<div class="grid-wrap">
-  <div class="section-label"><div class="dash"></div><h3>Semua Video</h3></div>
-  <div class="grid" id="grid"></div>
+<!-- ================= CONTENT ================= -->
+
+<main>
+
+
+<!-- TRENDING -->
+
+<section
+    class="section"
+    id="popular"
+>
+
+    <div class="section-head">
+
+        <div class="section-title">
+            Sedang Trending 🔥
+        </div>
+
+        <div class="see-all">
+            Lihat semua
+        </div>
+
+    </div>
+
+
+    <div
+        class="row"
+        id="trendingRow"
+    >
+
+
+        <!-- CONTENT 1 -->
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.9
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    The Last Journey
+                </div>
+
+                <div class="card-meta">
+                    2026 • Action
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT 2 -->
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.7
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Dark Horizon
+                </div>
+
+                <div class="card-meta">
+                    2026 • Thriller
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT 3 -->
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.5
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Lost Paradise
+                </div>
+
+                <div class="card-meta">
+                    2025 • Drama
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT 4 -->
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1533920379810-6bedac961555?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.4
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    No Escape
+                </div>
+
+                <div class="card-meta">
+                    2026 • Action
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTENT 5 -->
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.2
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    The Kingdom
+                </div>
+
+                <div class="card-meta">
+                    2026 • Fantasy
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- PILIHAN -->
+
+<section class="section">
+
+    <div class="section-head">
+
+        <div class="section-title">
+            Pilihan Untukmu
+        </div>
+
+    </div>
+
+
+    <div class="row landscape">
+
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=900&q=80"
+                >
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Cinema Night
+                </div>
+
+                <div class="card-meta">
+                    Featured • Movie
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=900&q=80"
+                >
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    The Unknown
+                </div>
+
+                <div class="card-meta">
+                    Featured • Mystery
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openPlayer()"
+        >
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80"
+                >
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Beyond Earth
+                </div>
+
+                <div class="card-meta">
+                    Featured • Sci-Fi
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- FILM -->
+
+<section
+    class="section"
+    id="film"
+>
+
+    <div class="section-head">
+
+        <div class="section-title">
+            Film Terbaru 🎬
+        </div>
+
+        <div class="see-all">
+            Lihat semua
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1513106580091-1d82408b8cd6?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.1
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Midnight City
+                </div>
+
+                <div class="card-meta">
+                    2026 • Crime
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.0
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    After Tomorrow
+                </div>
+
+                <div class="card-meta">
+                    2026 • Sci-Fi
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 7.9
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    The Story
+                </div>
+
+                <div class="card-meta">
+                    2025 • Drama
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&w=600&q=80"
+                >
+
+                <div class="rating">
+                    ★ 8.3
+                </div>
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Final Call
+                </div>
+
+                <div class="card-meta">
+                    2026 • Thriller
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- SERIES -->
+
+<section
+    class="section"
+    id="series"
+>
+
+    <div class="section-head">
+
+        <div class="section-title">
+            Series Pilihan
+        </div>
+
+    </div>
+
+
+    <div class="row landscape">
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&w=900&q=80"
+                >
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Black City
+                </div>
+
+                <div class="card-meta">
+                    Season 2 • 8 Episode
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="poster">
+
+                <img
+                    src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=900&q=80"
+                >
+
+            </div>
+
+            <div class="card-info">
+
+                <div class="card-title">
+                    Last Kingdom
+                </div>
+
+                <div class="card-meta">
+                    Season 1 • 10 Episode
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= SEARCH ================= -->
+
+<div
+    class="search"
+    id="search"
+>
+
+    <div class="search-top">
+
+        <input
+            class="search-input"
+            id="searchInput"
+            placeholder="Cari film, series..."
+            autocomplete="off"
+        >
+
+        <div
+            class="close-search"
+            onclick="closeSearch()"
+        >
+            ×
+        </div>
+
+    </div>
+
+
+    <div
+        class="search-results"
+        id="searchResults"
+    ></div>
+
 </div>
 
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <div class="frame-wrap" id="frameWrap"></div>
-    <button class="modal-close" onclick="closeModal()">Tutup</button>
-  </div>
+
+<!-- ================= PLAYER ================= -->
+
+<div
+    class="player"
+    id="player"
+>
+
+    <div class="video-container">
+
+        <div class="player-logo">
+            Lihat<span>Yuk</span>
+        </div>
+
+
+        <div
+            class="close-player"
+            onclick="closePlayer()"
+        >
+            ×
+        </div>
+
+
+        <video
+            id="videoPlayer"
+            controls
+            playsinline
+            preload="metadata"
+        ></video>
+
+    </div>
+
 </div>
 
-<footer>© 2026 Lihatyuk.sbs · <a onclick="openAdmin()">Developer</a></footer>
 
-<!-- ============ VERSI ADMIN / DEVELOPER ============ -->
-<div id="adminOverlay">
+<!-- ================= MOBILE NAV ================= -->
 
-  <div id="loginView">
-    <div class="admin-header">
-      <div class="logo">LIHAT<span style="color:var(--bulb)">YUK</span> <span style="color:var(--muted); font-size:13px;">/ developer</span></div>
-      <a class="exit-admin" onclick="closeAdmin()">← Kembali ke situs</a>
+<div class="mobile-nav">
+
+    <div
+        class="mobile-nav-item active"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    >
+
+        <span class="mobile-icon">
+            ⌂
+        </span>
+
+        Home
+
     </div>
-    <div class="login-wrap">
-      <p style="color:var(--muted); font-size:13px; margin-bottom:24px;">Masuk sebagai admin</p>
-      <div class="a-card">
-        <div class="a-msg error" id="loginError">Username atau password salah.</div>
-        <label>Username</label>
-        <input type="text" id="loginUser">
-        <label>Password</label>
-        <input type="password" id="loginPass">
-        <button class="a-btn" onclick="tryLogin()">Masuk</button>
-      </div>
-      <p class="a-note">Catatan: ini gerbang sederhana di sisi browser, bukan sistem login sungguhan (situs ini statis, tanpa server). Jangan andalkan ini untuk data yang benar-benar rahasia.</p>
+
+
+    <div
+        class="mobile-nav-item"
+        onclick="scrollToSection('film')"
+    >
+
+        <span class="mobile-icon">
+            🎬
+        </span>
+
+        Film
+
     </div>
-  </div>
 
-  <div id="panelView" style="display:none;">
-    <div class="admin-header">
-      <div class="logo">LIHAT<span style="color:var(--bulb)">YUK</span> <span style="color:var(--muted); font-size:13px;">/ developer</span></div>
-      <a class="exit-admin" onclick="closeAdmin()">← Kembali ke situs</a>
+
+    <div
+        class="mobile-nav-item"
+        onclick="scrollToSection('series')"
+    >
+
+        <span class="mobile-icon">
+            ▣
+        </span>
+
+        Series
+
     </div>
-    <div class="a-wrap">
-      <h1 class="display" style="font-size:26px; margin-bottom:6px;">KELOLA VIDEO</h1>
-      <p class="a-note" style="margin-bottom:22px;">
-        Tambah/hapus video di sini — <b>tampilan situs di atas otomatis ikut berubah</b> selama kamu masih di browser ini.
-        Supaya pengunjung lain juga lihat perubahannya, tetap klik <b>"Unduh index.html"</b> lalu upload ulang ke hosting.
-      </p>
 
-      <div class="a-msg success" id="adminMsg"></div>
 
-      <div class="a-card">
-        <h2>Tambah Video</h2>
-        <label>Judul Video</label>
-        <input type="text" id="fTitle" placeholder="contoh: Vlog Jalan-jalan ke Bromo">
-        <label>Kategori</label>
-        <input type="text" id="fCategory" placeholder="contoh: Vlog, Musik, Hiburan">
-        <label>Link atau ID YouTube</label>
-        <input type="text" id="fYoutube" placeholder="https://www.youtube.com/watch?v=...">
-        <button class="a-btn" onclick="addVideo()">+ Tambah ke Daftar</button>
-      </div>
+    <div
+        class="mobile-nav-item"
+        onclick="openSearch()"
+    >
 
-      <div class="a-card">
-        <h2>Daftar Video (<span id="countLabel">0</span>)</h2>
-        <p class="a-note" style="margin-bottom:6px;">Video pertama di daftar otomatis jadi video unggulan di halaman utama.</p>
-        <div id="listWrap"></div>
-      </div>
+        <span class="mobile-icon">
+            ⌕
+        </span>
 
-      <div class="a-card">
-        <h2>Publikasikan Perubahan</h2>
-        <p class="a-note">Klik tombol ini untuk download file <b>index.html</b> lengkap (situs + panel developer ini, dengan video terbaru sudah tertanam). Upload untuk menimpa file lama di hosting.</p>
-        <button class="a-btn" onclick="downloadSite()">⬇ Unduh index.html</button>
-      </div>
+        Cari
+
     </div>
-  </div>
 
 </div>
+
 
 <script>
+
 /*
-  ====================================================================
-  DATA VIDEO
-  Bisa diedit manual di sini, atau lewat panel "Developer" di footer.
-  Video pertama di daftar = jadi video unggulan di hero.
-  ====================================================================
+========================================================
+LIHATYUK CONTENT DATA
+========================================================
+
+NANTI BAGIAN INI AKAN DIGANTI DENGAN DATA DARI D1.
+
+FORMAT DATA:
+
+{
+    id: 1,
+    title: "Judul Film",
+    poster: "URL POSTER",
+    video_url: "URL VIDEO",
+    description: "Deskripsi",
+    year: 2026,
+    genre: "Action",
+    rating: 8.5,
+    type: "movie"
+}
+
+========================================================
 */
-let videos = [
-  { title: "Contoh Video 1", category: "Hiburan", youtubeId: "dQw4w9WgXcQ" },
-  { title: "Contoh Video 2", category: "Musik",    youtubeId: "9bZkp7q19f0" },
-  { title: "Contoh Video 3", category: "Vlog",     youtubeId: "5qap5aO4i9A" },
+
+
+const CONTENT_API = "/api/contents";
+
+
+/*
+========================================================
+HEADER
+========================================================
+*/
+
+window.addEventListener("scroll",function(){
+
+    const header =
+        document.getElementById("header");
+
+    if(window.scrollY > 40){
+
+        header.classList.add("scrolled");
+
+    }else{
+
+        header.classList.remove("scrolled");
+
+    }
+
+});
+
+
+/*
+========================================================
+SEARCH
+========================================================
+*/
+
+function openSearch(){
+
+    const search =
+        document.getElementById("search");
+
+    search.classList.add("active");
+
+    setTimeout(function(){
+
+        document
+            .getElementById("searchInput")
+            .focus();
+
+    },100);
+
+}
+
+
+function closeSearch(){
+
+    document
+        .getElementById("search")
+        .classList.remove("active");
+
+    document
+        .getElementById("searchInput")
+        .value="";
+
+    document
+        .getElementById("searchResults")
+        .innerHTML="";
+
+}
+
+
+/*
+========================================================
+PLAYER
+========================================================
+*/
+
+function openPlayer(videoUrl=""){
+
+    const player =
+        document.getElementById("player");
+
+    const video =
+        document.getElementById("videoPlayer");
+
+
+    /*
+    NANTI:
+    videoUrl akan berasal dari D1.
+    */
+
+    if(videoUrl){
+
+        video.src = videoUrl;
+
+    }
+
+
+    player.classList.add("active");
+
+    document.body.style.overflow="hidden";
+
+
+    if(videoUrl){
+
+        video.play().catch(function(){});
+
+    }
+
+}
+
+
+function closePlayer(){
+
+    const player =
+        document.getElementById("player");
+
+    const video =
+        document.getElementById("videoPlayer");
+
+
+    video.pause();
+
+    video.removeAttribute("src");
+
+    video.load();
+
+    player.classList.remove("active");
+
+    document.body.style.overflow="";
+
+}
+
+
+/*
+========================================================
+SEARCH DEMO
+========================================================
+*/
+
+const demoTitles = [
+
+    "The Last Journey",
+    "Dark Horizon",
+    "Lost Paradise",
+    "No Escape",
+    "The Kingdom",
+    "Midnight City",
+    "After Tomorrow",
+    "The Story",
+    "Final Call",
+    "Black City",
+    "Last Kingdom"
+
 ];
 
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = '123456789$';
 
-/* ============ VERSI PUBLIK ============ */
-const grid = document.getElementById('grid');
-const tabsEl = document.getElementById('tabs');
-const featuredWrap = document.getElementById('featuredWrap');
-const modal = document.getElementById('modal');
-const frameWrap = document.getElementById('frameWrap');
-const searchInput = document.getElementById('searchInput');
+document
+.getElementById("searchInput")
+.addEventListener("input",function(){
 
-let activeCategory = 'Semua';
-let searchTerm = '';
+    const keyword =
+        this.value
+        .toLowerCase()
+        .trim();
 
-function thumbUrl(id, hq){ return `https://img.youtube.com/vi/${id}/${hq ? 'maxresdefault' : 'hqdefault'}.jpg`; }
+    const results =
+        document.getElementById("searchResults");
 
-function renderFeatured(){
-  if (!videos.length){ featuredWrap.innerHTML = ''; return; }
-  const f = videos[0];
-  featuredWrap.innerHTML = `
-    <div class="section-label"><div class="dash"></div><h3>Video Unggulan</h3></div>
-    <div class="featured-card" data-id="${f.youtubeId}">
-      <img src="${thumbUrl(f.youtubeId, true)}" alt="${f.title}" onerror="this.src='${thumbUrl(f.youtubeId,false)}'">
-      <svg class="featured-play" viewBox="0 0 24 24" fill="#FFB84D"><circle cx="12" cy="12" r="11" fill="rgba(8,9,13,.6)"/><path d="M10 8l6 4-6 4V8z"/></svg>
-      <div class="featured-info">
-        <div class="featured-badge">Unggulan</div>
-        <div class="ftitle display">${f.title}</div>
-        <div class="fcat">${f.category}</div>
-      </div>
-    </div>
-  `;
-  featuredWrap.querySelector('.featured-card').onclick = () => openModal(f.youtubeId);
+
+    if(!keyword){
+
+        results.innerHTML="";
+        return;
+
+    }
+
+
+    const found =
+        demoTitles.filter(function(title){
+
+            return title
+                .toLowerCase()
+                .includes(keyword);
+
+        });
+
+
+    if(!found.length){
+
+        results.innerHTML=`
+
+            <div style="
+                text-align:center;
+                padding:60px;
+                color:#777;
+            ">
+
+                Tidak ada hasil untuk
+                "${keyword}"
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    results.innerHTML=`
+
+        <div style="
+            display:grid;
+            grid-template-columns:
+            repeat(auto-fill,minmax(140px,1fr));
+            gap:20px;
+        ">
+
+            ${found.map(function(title){
+
+                return `
+
+                    <div
+                        onclick="openPlayer()"
+                        style="cursor:pointer"
+                    >
+
+                        <div style="
+                            aspect-ratio:2/3;
+                            background:#151515;
+                            border-radius:9px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            text-align:center;
+                            padding:15px;
+                            font-weight:bold;
+                        ">
+
+                            ${title}
+
+                        </div>
+
+                        <div style="
+                            margin-top:8px;
+                            font-size:13px;
+                        ">
+
+                            ${title}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }).join("")}
+
+        </div>
+
+    `;
+
+});
+
+
+/*
+========================================================
+MOBILE NAV
+========================================================
+*/
+
+function scrollToSection(id){
+
+    const element =
+        document.getElementById(id);
+
+    if(element){
+
+        element.scrollIntoView({
+            behavior:"smooth"
+        });
+
+    }
+
 }
 
-function renderTabs(){
-  const cats = ['Semua', ...new Set(videos.map(v => v.category))];
-  tabsEl.innerHTML = cats.map(c => `<div class="tab ${c===activeCategory ? 'active':''}" data-cat="${c}">${c}</div>`).join('');
-  tabsEl.querySelectorAll('.tab').forEach(t => { t.onclick = () => { activeCategory = t.dataset.cat; renderTabs(); renderGrid(); }; });
+
+/*
+========================================================
+ESC KEY
+========================================================
+*/
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key==="Escape"){
+
+            closePlayer();
+            closeSearch();
+
+        }
+
+    }
+);
+
+
+/*
+========================================================
+FUNGSI UNTUK D1
+========================================================
+
+NANTI KITA AKAN MENGAKTIFKAN:
+
+async function loadContents(){
+
+    const response =
+        await fetch(CONTENT_API);
+
+    const contents =
+        await response.json();
+
+    // tampilkan contents
 }
 
-function renderGrid(){
-  const filtered = videos.filter(v => (activeCategory === 'Semua' || v.category === activeCategory) && v.title.toLowerCase().includes(searchTerm.toLowerCase()));
-  grid.innerHTML = filtered.map(v => `
-    <div class="card" data-id="${v.youtubeId}">
-      <div class="thumb">
-        <div class="cat-chip">${v.category}</div>
-        <img src="${thumbUrl(v.youtubeId,false)}" alt="${v.title}" loading="lazy">
-        <div class="play-badge"><svg viewBox="0 0 24 24" fill="#FFB84D"><circle cx="12" cy="12" r="11" fill="rgba(8,9,13,.6)"/><path d="M10 8l6 4-6 4V8z"/></svg></div>
-      </div>
-      <div class="card-info"><div class="title">${v.title}</div></div>
-    </div>
-  `).join('') || `<p class="empty-state">Belum ada video di kategori ini.</p>`;
-  grid.querySelectorAll('.card').forEach(c => { c.onclick = () => openModal(c.dataset.id); });
-}
+========================================================
+*/
 
-function openModal(id){
-  frameWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-  modal.classList.add('open');
-}
-function closeModal(){ modal.classList.remove('open'); frameWrap.innerHTML = ''; }
-modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); } });
-searchInput.addEventListener('input', e => { searchTerm = e.target.value; renderGrid(); });
-
-function renderAll(){ renderFeatured(); renderTabs(); renderGrid(); }
-renderAll();
-
-/* ============ VERSI ADMIN / DEVELOPER ============ */
-const adminOverlay = document.getElementById('adminOverlay');
-const loginView = document.getElementById('loginView');
-const panelView = document.getElementById('panelView');
-const loginError = document.getElementById('loginError');
-const adminMsg = document.getElementById('adminMsg');
-const listWrap = document.getElementById('listWrap');
-const countLabel = document.getElementById('countLabel');
-
-function openAdmin(){
-  adminOverlay.classList.add('open');
-  loginView.style.display = 'block';
-  panelView.style.display = 'none';
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  loginError.classList.remove('show');
-}
-function closeAdmin(){ adminOverlay.classList.remove('open'); }
-
-function tryLogin(){
-  const u = document.getElementById('loginUser').value;
-  const p = document.getElementById('loginPass').value;
-  if (u === ADMIN_USER && p === ADMIN_PASS){
-    loginView.style.display = 'none';
-    panelView.style.display = 'block';
-    renderAdminList();
-  } else {
-    loginError.classList.add('show');
-  }
-}
-
-function extractYoutubeId(input){
-  input = input.trim();
-  let m = input.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
-  if (m) return m[1];
-  if (/^[A-Za-z0-9_-]{11}$/.test(input)) return input;
-  return null;
-}
-
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
-
-function renderAdminList(){
-  countLabel.textContent = videos.length;
-  if (videos.length === 0){
-    listWrap.innerHTML = '<p class="a-empty">Belum ada video.</p>';
-    return;
-  }
-  listWrap.innerHTML = videos.map((v, i) => `
-    <div class="a-row">
-      <div class="a-thumb"><img src="https://img.youtube.com/vi/${v.youtubeId}/default.jpg" alt=""></div>
-      <div class="a-info">
-        <div class="a-t">${escapeHtml(v.title)}${i===0 ? ' ⭐' : ''}</div>
-        <div class="a-c">${escapeHtml(v.category)}</div>
-      </div>
-      <button class="a-del" onclick="removeVideo(${i})">Hapus</button>
-    </div>
-  `).join('');
-}
-
-function addVideo(){
-  const title = document.getElementById('fTitle').value.trim();
-  const category = document.getElementById('fCategory').value.trim();
-  const ytInput = document.getElementById('fYoutube').value.trim();
-  const ytId = extractYoutubeId(ytInput);
-
-  if (!title || !category || !ytId){
-    alert('Judul & kategori wajib diisi, dan link/ID YouTube harus valid.');
-    return;
-  }
-  videos.push({ title, category, youtubeId: ytId });
-  document.getElementById('fTitle').value = '';
-  document.getElementById('fCategory').value = '';
-  document.getElementById('fYoutube').value = '';
-  renderAdminList();
-  renderAll();
-  flashMsg('Video ditambahkan ke situs (sementara, di browser ini). Klik "Unduh index.html" untuk mempublikasikan.');
-}
-
-function removeVideo(i){
-  videos.splice(i, 1);
-  renderAdminList();
-  renderAll();
-  flashMsg('Video dihapus.');
-}
-
-function flashMsg(text){
-  adminMsg.textContent = text;
-  adminMsg.classList.add('show');
-  setTimeout(() => adminMsg.classList.remove('show'), 3500);
-}
-
-function downloadSite(){
-  const html = document.documentElement.outerHTML;
-  const fullHtml = '<!DOCTYPE html>\n' + html.replace(
-    /let videos = \[[\s\S]*?\];/,
-    'let videos = ' + JSON.stringify(videos, null, 2) + ';'
-  );
-  const blob = new Blob([fullHtml], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'index.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
 </script>
 
 </body>
