@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lihatyuk — Nonton Streaming Pilihan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08090D; --bg-soft:#111420; --bg-card:#151926; --bg-card-hi:#1B2030;
+    --bulb:#FFB84D; --bulb-soft:#FFD08A; --velvet:#E14D63;
+    --cream:#F5F2EC; --muted:#8891A3; --line:rgba(255,255,255,.07);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--bg); color:var(--cream); font-family:'Work Sans', sans-serif; min-height:100vh; }
+  .display{font-family:'Bebas Neue', sans-serif; letter-spacing:.035em;}
+  ::selection{ background:var(--bulb); color:var(--bg); }
+  img{ display:block; }
+
+  body::before{
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 1000px 560px at 50% -8%, rgba(255,184,77,.12), transparent 62%),
+      radial-gradient(ellipse 800px 560px at 105% 15%, rgba(225,77,99,.09), transparent 60%),
+      radial-gradient(ellipse 700px 500px at -5% 60%, rgba(255,184,77,.05), transparent 55%);
+  }
+
+  /* ===== HEADER ===== */
+  header{
+    position:sticky; top:0; z-index:50; background:rgba(8,9,13,.78); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line); padding:16px 30px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{font-family:'Bebas Neue'; font-size:25px; letter-spacing:.06em; color:var(--cream); display:flex; align-items:center; gap:2px;}
+  .logo .bulb-dot{ width:6px; height:6px; border-radius:50%; background:var(--bulb); box-shadow:0 0 10px 1px var(--bulb); margin-left:5px; margin-bottom:12px; }
+  .logo span{color:var(--bulb);}
+  .search-box{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:999px;
+    padding:9px 18px; display:flex; align-items:center; gap:10px; width:min(340px, 42vw); transition:.15s;
+  }
+  .search-box:focus-within{ border-color:var(--bulb); box-shadow:0 0 0 3px rgba(255,184,77,.1); }
+  .search-box input{ background:transparent; border:none; outline:none; color:var(--cream); font-family:'Work Sans'; font-size:14px; width:100%; }
+  .search-box input::placeholder{color:var(--muted);}
+
+  /* ===== HERO ===== */
+  .hero{ position:relative; z-index:1; padding:60px 24px 0; text-align:center; overflow:hidden; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--bulb-soft); margin-bottom:20px; font-weight:600;
+  }
+  .eyebrow::before, .eyebrow::after{ content:''; width:26px; height:1px; background:linear-gradient(90deg, transparent, var(--bulb)); }
+  .eyebrow::after{ background:linear-gradient(90deg, var(--bulb), transparent); }
+  .marquee-frame{ display:inline-block; padding:26px 52px; border:2px solid var(--bulb); border-radius:14px; position:relative; box-shadow:0 0 70px rgba(255,184,77,.10); }
+  .marquee-frame::before, .marquee-frame::after{
+    content:''; position:absolute; inset:-11px; border-radius:18px;
+    background-image: radial-gradient(circle, var(--bulb) 2.3px, transparent 2.7px);
+    background-size: 23px 23px; background-position: 0 0;
+    animation: chase 1.5s linear infinite; opacity:.85; pointer-events:none;
+  }
+  .marquee-frame::after{ animation-delay:.75s; opacity:.3; }
+  @keyframes chase{ 0%{ background-position: 0 0; } 100%{ background-position: 23px 23px; } }
+  .hero h1{ font-size:clamp(38px, 8vw, 84px); color:var(--cream); line-height:.95; }
+  .hero h1 span{color:var(--bulb);}
+  .hero p{ margin-top:16px; color:var(--muted); font-size:15px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.6; }
+
+  /* ===== FEATURED ===== */
+  .featured-wrap{ position:relative; z-index:1; max-width:1200px; margin:52px auto 0; padding:0 24px; }
+  .section-label{ display:flex; align-items:baseline; gap:10px; margin-bottom:16px; }
+  .section-label .dash{ width:18px; height:3px; background:var(--bulb); border-radius:2px; }
+  .section-label h3{ font-family:'Bebas Neue'; font-size:22px; letter-spacing:.03em; color:var(--cream); }
+  .featured-card{
+    position:relative; border-radius:18px; overflow:hidden; cursor:pointer;
+    border:1px solid var(--line); aspect-ratio:21/9; background:#000;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+  }
+  .featured-card img{ width:100%; height:100%; object-fit:cover; transition:.5s transform; }
+  .featured-card:hover img{ transform:scale(1.03); }
+  .featured-card::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(8,9,13,.92) 5%, rgba(8,9,13,.15) 55%, transparent 80%);
+  }
+  .featured-info{ position:absolute; left:0; right:0; bottom:0; padding:28px 32px; z-index:2; text-align:left; }
+  .featured-badge{ display:inline-block; background:var(--bulb); color:var(--bg); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; padding:5px 12px; border-radius:999px; margin-bottom:12px; }
+  .featured-info .ftitle{ font-family:'Bebas Neue'; font-size:clamp(26px,4vw,42px); letter-spacing:.02em; color:var(--cream); line-height:1.05; max-width:80%; }
+  .featured-info .fcat{ margin-top:8px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
+  .featured-play{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
+    width:64px; height:64px; opacity:0; transition:.25s;
+  }
+  .featured-card:hover .featured-play{ opacity:1; }
+
+  /* ===== TABS ===== */
+  .tabs-wrap{ position:relative; z-index:1; max-width:1200px; margin:44px auto 0; }
+  .tabs{ display:flex; gap:10px; overflow-x:auto; padding:0 24px 20px; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:none; padding:9px 20px; border-radius:999px; border:1px solid var(--line);
+    color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:.15s;
+  }
+  .tab:hover{ border-color:var(--bulb); color:var(--cream); }
+  .tab.active{ background:var(--bulb); border-color:var(--bulb); color:var(--bg); }
+
+  /* ===== GRID ===== */
+  .grid-wrap{ position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 24px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:22px; padding:8px 0 90px; }
+  .card{
+    background:var(--bg-card); border-radius:12px; overflow:hidden; cursor:pointer;
+    border:1px solid var(--line); transition:.25s transform, .25s border-color, .25s box-shadow, .25s background;
+  }
+  .card:hover{ transform:translateY(-5px); border-color:var(--bulb); box-shadow:0 16px 36px rgba(0,0,0,.4); background:var(--bg-card-hi); }
+  .thumb{ position:relative; aspect-ratio:16/9; background:#000; overflow:hidden; }
+  .thumb img{ width:100%; height:100%; object-fit:cover; transition:.4s transform; }
+  .card:hover .thumb img{ transform:scale(1.06); }
+  .thumb::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(0,0,0,.6) 100%); }
+  .cat-chip{
+    position:absolute; top:10px; left:10px; z-index:2; background:rgba(8,9,13,.7); backdrop-filter:blur(4px);
+    color:var(--bulb-soft); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:4px 10px; border-radius:999px; border:1px solid rgba(255,184,77,.25);
+  }
+  .play-badge{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:2; opacity:0; transition:.2s; }
+  .card:hover .play-badge{ opacity:1; }
+  .play-badge svg{ width:44px; height:44px; filter:drop-shadow(0 2px 8px rgba(0,0,0,.6)); }
+  .card-info{ padding:13px 15px 16px; }
+  .card-info .title{ font-size:14px; font-weight:600; color:var(--cream); line-height:1.35; }
+  .empty-state{ color:var(--muted); grid-column:1/-1; text-align:center; padding:60px 20px; font-size:14px; }
+
+  /* ===== MODAL ===== */
+  .modal{ position:fixed; inset:0; background:rgba(4,5,7,.92); display:none; align-items:center; justify-content:center; z-index:200; padding:24px; backdrop-filter:blur(6px); }
+  .modal.open{ display:flex; animation:fadeIn .2s ease; }
+  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+  .modal-box{ width:min(920px, 100%); }
+  .modal-box .frame-wrap{ position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid rgba(255,184,77,.3); box-shadow:0 24px 70px rgba(0,0,0,.65); }
+  .modal-box iframe{ width:100%; height:100%; border:0; }
+  .modal-close{
+    display:block; margin:16px auto 0; color:var(--muted); background:none; border:1px solid var(--line);
+    border-radius:999px; padding:9px 22px; cursor:pointer; font-family:'Work Sans'; font-size:13px; transition:.15s;
+  }
+  .modal-close:hover{ color:var(--cream); border-color:var(--bulb); }
+
+  footer{ position:relative; z-index:1; text-align:center; padding:30px; color:var(--muted); font-size:12px; border-top:1px solid var(--line); }
+  footer a{ color:var(--muted); cursor:pointer; }
+  footer a:hover{ color:var(--bulb); }
+
+  @media (max-width:640px){
+    header{ padding:14px 18px; } .search-box{ width:120px; padding:8px 12px; }
+    .hero{ padding:44px 18px 0; } .marquee-frame{ padding:20px 24px; }
+    .featured-wrap{ margin-top:38px; } .featured-card{ aspect-ratio:16/12; }
+    .featured-info{ padding:20px; } .featured-info .ftitle{ max-width:100%; }
+    .grid{ padding:8px 0 70px; gap:14px; }
+  }
+
+  /* ===== ADMIN LAYER ===== */
+  #adminOverlay{ position:fixed; inset:0; background:var(--bg); z-index:300; display:none; overflow-y:auto; }
+  #adminOverlay.open{ display:block; }
+  .admin-header{ padding:18px 24px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; background:var(--bg); z-index:2; }
+  .admin-header .logo{ font-size:22px; }
+  a.exit-admin{ color:var(--muted); font-size:13px; border:1px solid var(--line); padding:7px 16px; border-radius:999px; cursor:pointer; }
+  a.exit-admin:hover{ color:var(--cream); border-color:var(--bulb); }
+  .login-wrap{ max-width:340px; margin:90px auto; padding:0 20px; text-align:center; }
+  .a-card{ background:var(--bg-soft); border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:22px; text-align:left; }
+  .a-card h2{ font-family:'Bebas Neue'; font-size:20px; margin-bottom:14px; letter-spacing:.03em; }
+  .a-wrap{ max-width:640px; margin:0 auto; padding:32px 20px 90px; }
+  .a-card label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; margin-top:14px; text-transform:uppercase; letter-spacing:.04em; }
+  .a-card label:first-of-type{ margin-top:0; }
+  .a-card input[type=text], .a-card input[type=password]{
+    width:100%; padding:11px 13px; background:var(--bg); border:1px solid var(--line);
+    border-radius:8px; color:var(--cream); font-family:'Work Sans'; font-size:14px; outline:none;
+  }
+  .a-card input:focus{ border-color:var(--bulb); }
+  .a-btn{ margin-top:20px; width:100%; padding:12px; border:none; border-radius:8px; background:var(--bulb); color:var(--bg); font-weight:700; font-size:14px; cursor:pointer; }
+  .a-btn:hover{ opacity:.9; }
+  .a-msg{ padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; display:none; }
+  .a-msg.show{ display:block; }
+  .a-msg.error{ background:rgba(225,77,99,.15); color:#ff9aa8; border:1px solid rgba(225,77,99,.4); }
+  .a-msg.success{ background:rgba(46,139,87,.2); color:#7fe8a8; border:1px solid rgba(46,139,87,.4); }
+  .a-row{ display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); gap:12px; }
+  .a-row:last-child{ border-bottom:none; }
+  .a-row .a-thumb{ width:64px; height:36px; border-radius:6px; overflow:hidden; flex:none; background:#000; }
+  .a-row .a-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .a-row .a-info{ flex:1; min-width:0; }
+  .a-row .a-info .a-t{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .a-row .a-info .a-c{ font-size:11px; color:var(--velvet); text-transform:uppercase; font-weight:700; margin-top:2px; }
+  .a-del{ flex:none; background:transparent; border:1px solid var(--line); color:var(--muted); font-size:12px; padding:7px 12px; border-radius:999px; cursor:pointer; }
+  .a-del:hover{ color:#ff9aa8; border-color:#ff9aa8; }
+  .a-empty{ color:var(--muted); font-size:13px; padding:8px 0; }
+  .a-note{ font-size:12px; color:var(--muted); line-height:1.7; margin-top:6px; }
+  .a-note b{ color:var(--bulb-soft); }
+</style>
+</head>
+<body>
+
+<!-- ============ VERSI UMUM (PUBLIK) ============ -->
+<header>
+  <div class="logo">LIHAT<span>YUK</span><span class="bulb-dot"></span></div>
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8891A3" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="searchInput" type="text" placeholder="Cari video...">
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Nonton Kapan Saja</div>
+  <div class="marquee-frame"><h1 class="display">SEDANG <span>TAYANG</span></h1></div>
+  <p>Kumpulan video pilihan dari berbagai kategori — tinggal klik, langsung diputar di sini.</p>
+</section>
+
+<div class="featured-wrap" id="featuredWrap"></div>
+
+<div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
+<div class="grid-wrap">
+  <div class="section-label"><div class="dash"></div><h3>Semua Video</h3></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="frame-wrap" id="frameWrap"></div>
+    <button class="modal-close" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<footer>© 2026 Lihatyuk.sbs · <a onclick="openAdmin()">Developer</a></footer>
+
+<!-- ============ VERSI ADMIN / DEVELOPER ============ -->
+<div id="adminOverlay">
+
+  <div id="loginView">
+    <div class="admin-header">
+      <div class="logo">LIHAT<span style="color:var(--bulb)">YUK</span> <span style="color:var(--muted); font-size:13px;">/ developer</span></div>
+      <a class="exit-admin" onclick="closeAdmin()">← Kembali ke situs</a>
+    </div>
+    <div class="login-wrap">
+      <p style="color:var(--muted); font-size:13px; margin-bottom:24px;">Masuk sebagai admin</p>
+      <div class="a-card">
+        <div class="a-msg error" id="loginError">Username atau password salah.</div>
+        <label>Username</label>
+        <input type="text" id="loginUser">
+        <label>Password</label>
+        <input type="password" id="loginPass">
+        <button class="a-btn" onclick="tryLogin()">Masuk</button>
+      </div>
+      <p class="a-note">Catatan: ini gerbang sederhana di sisi browser, bukan sistem login sungguhan (situs ini statis, tanpa server). Jangan andalkan ini untuk data yang benar-benar rahasia.</p>
+    </div>
+  </div>
+
+  <div id="panelView" style="display:none;">
+    <div class="admin-header">
+      <div class="logo">LIHAT<span style="color:var(--bulb)">YUK</span> <span style="color:var(--muted); font-size:13px;">/ developer</span></div>
+      <a class="exit-admin" onclick="closeAdmin()">← Kembali ke situs</a>
+    </div>
+    <div class="a-wrap">
+      <h1 class="display" style="font-size:26px; margin-bottom:6px;">KELOLA VIDEO</h1>
+      <p class="a-note" style="margin-bottom:22px;">
+        Tambah/hapus video di sini — <b>tampilan situs di atas otomatis ikut berubah</b> selama kamu masih di browser ini.
+        Supaya pengunjung lain juga lihat perubahannya, tetap klik <b>"Unduh index.html"</b> lalu upload ulang ke hosting.
+      </p>
+
+      <div class="a-msg success" id="adminMsg"></div>
+
+      <div class="a-card">
+        <h2>Tambah Video</h2>
+        <label>Judul Video</label>
+        <input type="text" id="fTitle" placeholder="contoh: Vlog Jalan-jalan ke Bromo">
+        <label>Kategori</label>
+        <input type="text" id="fCategory" placeholder="contoh: Vlog, Musik, Hiburan">
+        <label>Link atau ID YouTube</label>
+        <input type="text" id="fYoutube" placeholder="https://www.youtube.com/watch?v=...">
+        <button class="a-btn" onclick="addVideo()">+ Tambah ke Daftar</button>
+      </div>
+
+      <div class="a-card">
+        <h2>Daftar Video (<span id="countLabel">0</span>)</h2>
+        <p class="a-note" style="margin-bottom:6px;">Video pertama di daftar otomatis jadi video unggulan di halaman utama.</p>
+        <div id="listWrap"></div>
+      </div>
+
+      <div class="a-card">
+        <h2>Publikasikan Perubahan</h2>
+        <p class="a-note">Klik tombol ini untuk download file <b>index.html</b> lengkap (situs + panel developer ini, dengan video terbaru sudah tertanam). Upload untuk menimpa file lama di hosting.</p>
+        <button class="a-btn" onclick="downloadSite()">⬇ Unduh index.html</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/*
+  ====================================================================
+  DATA VIDEO
+  Bisa diedit manual di sini, atau lewat panel "Developer" di footer.
+  Video pertama di daftar = jadi video unggulan di hero.
+  ====================================================================
+*/
+let videos = [
+  { title: "Contoh Video 1", category: "Hiburan", youtubeId: "dQw4w9WgXcQ" },
+  { title: "Contoh Video 2", category: "Musik",    youtubeId: "9bZkp7q19f0" },
+  { title: "Contoh Video 3", category: "Vlog",     youtubeId: "5qap5aO4i9A" },
+];
+
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = '123456789$';
+
+/* ============ VERSI PUBLIK ============ */
+const grid = document.getElementById('grid');
+const tabsEl = document.getElementById('tabs');
+const featuredWrap = document.getElementById('featuredWrap');
+const modal = document.getElementById('modal');
+const frameWrap = document.getElementById('frameWrap');
+const searchInput = document.getElementById('searchInput');
+
+let activeCategory = 'Semua';
+let searchTerm = '';
+
+function thumbUrl(id, hq){ return `https://img.youtube.com/vi/${id}/${hq ? 'maxresdefault' : 'hqdefault'}.jpg`; }
+
+function renderFeatured(){
+  if (!videos.length){ featuredWrap.innerHTML = ''; return; }
+  const f = videos[0];
+  featuredWrap.innerHTML = `
+    <div class="section-label"><div class="dash"></div><h3>Video Unggulan</h3></div>
+    <div class="featured-card" data-id="${f.youtubeId}">
+      <img src="${thumbUrl(f.youtubeId, true)}" alt="${f.title}" onerror="this.src='${thumbUrl(f.youtubeId,false)}'">
+      <svg class="featured-play" viewBox="0 0 24 24" fill="#FFB84D"><circle cx="12" cy="12" r="11" fill="rgba(8,9,13,.6)"/><path d="M10 8l6 4-6 4V8z"/></svg>
+      <div class="featured-info">
+        <div class="featured-badge">Unggulan</div>
+        <div class="ftitle display">${f.title}</div>
+        <div class="fcat">${f.category}</div>
+      </div>
+    </div>
+  `;
+  featuredWrap.querySelector('.featured-card').onclick = () => openModal(f.youtubeId);
+}
+
+function renderTabs(){
+  const cats = ['Semua', ...new Set(videos.map(v => v.category))];
+  tabsEl.innerHTML = cats.map(c => `<div class="tab ${c===activeCategory ? 'active':''}" data-cat="${c}">${c}</div>`).join('');
+  tabsEl.querySelectorAll('.tab').forEach(t => { t.onclick = () => { activeCategory = t.dataset.cat; renderTabs(); renderGrid(); }; });
+}
+
+function renderGrid(){
+  const filtered = videos.filter(v => (activeCategory === 'Semua' || v.category === activeCategory) && v.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  grid.innerHTML = filtered.map(v => `
+    <div class="card" data-id="${v.youtubeId}">
+      <div class="thumb">
+        <div class="cat-chip">${v.category}</div>
+        <img src="${thumbUrl(v.youtubeId,false)}" alt="${v.title}" loading="lazy">
+        <div class="play-badge"><svg viewBox="0 0 24 24" fill="#FFB84D"><circle cx="12" cy="12" r="11" fill="rgba(8,9,13,.6)"/><path d="M10 8l6 4-6 4V8z"/></svg></div>
+      </div>
+      <div class="card-info"><div class="title">${v.title}</div></div>
+    </div>
+  `).join('') || `<p class="empty-state">Belum ada video di kategori ini.</p>`;
+  grid.querySelectorAll('.card').forEach(c => { c.onclick = () => openModal(c.dataset.id); });
+}
+
+function openModal(id){
+  frameWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  modal.classList.add('open');
+}
+function closeModal(){ modal.classList.remove('open'); frameWrap.innerHTML = ''; }
+modal.addEventListener('click', e => { if(e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeModal(); } });
+searchInput.addEventListener('input', e => { searchTerm = e.target.value; renderGrid(); });
+
+function renderAll(){ renderFeatured(); renderTabs(); renderGrid(); }
+renderAll();
+
+/* ============ VERSI ADMIN / DEVELOPER ============ */
+const adminOverlay = document.getElementById('adminOverlay');
+const loginView = document.getElementById('loginView');
+const panelView = document.getElementById('panelView');
+const loginError = document.getElementById('loginError');
+const adminMsg = document.getElementById('adminMsg');
+const listWrap = document.getElementById('listWrap');
+const countLabel = document.getElementById('countLabel');
+
+function openAdmin(){
+  adminOverlay.classList.add('open');
+  loginView.style.display = 'block';
+  panelView.style.display = 'none';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  loginError.classList.remove('show');
+}
+function closeAdmin(){ adminOverlay.classList.remove('open'); }
+
+function tryLogin(){
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS){
+    loginView.style.display = 'none';
+    panelView.style.display = 'block';
+    renderAdminList();
+  } else {
+    loginError.classList.add('show');
+  }
+}
+
+function extractYoutubeId(input){
+  input = input.trim();
+  let m = input.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  if (/^[A-Za-z0-9_-]{11}$/.test(input)) return input;
+  return null;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function renderAdminList(){
+  countLabel.textContent = videos.length;
+  if (videos.length === 0){
+    listWrap.innerHTML = '<p class="a-empty">Belum ada video.</p>';
+    return;
+  }
+  listWrap.innerHTML = videos.map((v, i) => `
+    <div class="a-row">
+      <div class="a-thumb"><img src="https://img.youtube.com/vi/${v.youtubeId}/default.jpg" alt=""></div>
+      <div class="a-info">
+        <div class="a-t">${escapeHtml(v.title)}${i===0 ? ' ⭐' : ''}</div>
+        <div class="a-c">${escapeHtml(v.category)}</div>
+      </div>
+      <button class="a-del" onclick="removeVideo(${i})">Hapus</button>
+    </div>
+  `).join('');
+}
+
+function addVideo(){
+  const title = document.getElementById('fTitle').value.trim();
+  const category = document.getElementById('fCategory').value.trim();
+  const ytInput = document.getElementById('fYoutube').value.trim();
+  const ytId = extractYoutubeId(ytInput);
+
+  if (!title || !category || !ytId){
+    alert('Judul & kategori wajib diisi, dan link/ID YouTube harus valid.');
+    return;
+  }
+  videos.push({ title, category, youtubeId: ytId });
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fCategory').value = '';
+  document.getElementById('fYoutube').value = '';
+  renderAdminList();
+  renderAll();
+  flashMsg('Video ditambahkan ke situs (sementara, di browser ini). Klik "Unduh index.html" untuk mempublikasikan.');
+}
+
+function removeVideo(i){
+  videos.splice(i, 1);
+  renderAdminList();
+  renderAll();
+  flashMsg('Video dihapus.');
+}
+
+function flashMsg(text){
+  adminMsg.textContent = text;
+  adminMsg.classList.add('show');
+  setTimeout(() => adminMsg.classList.remove('show'), 3500);
+}
+
+function downloadSite(){
+  const html = document.documentElement.outerHTML;
+  const fullHtml = '<!DOCTYPE html>\n' + html.replace(
+    /let videos = \[[\s\S]*?\];/,
+    'let videos = ' + JSON.stringify(videos, null, 2) + ';'
+  );
+  const blob = new Blob([fullHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'index.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
