@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<title>LihatYuk — Premium Streaming</title>
+
+<style>
+*{
+ margin:0;
+ padding:0;
+ box-sizing:border-box;
+}
+
+:root{
+ --bg:#050507;
+ --red:#e50914;
+ --red2:#ff3340;
+ --white:#fff;
+ --muted:#96969f;
+ --line:#ffffff12;
+}
+
+html{
+ scroll-behavior:smooth;
+}
+
+body{
+ background:var(--bg);
+ color:white;
+ font-family:Arial,Helvetica,sans-serif;
+ overflow-x:hidden;
+}
+
+/* =========================
+   AMBIENT BACKGROUND
+========================= */
+
+body:before,
+body:after{
+ content:"";
+ position:fixed;
+ width:420px;
+ height:420px;
+ border-radius:50%;
+ filter:blur(100px);
+ opacity:.13;
+ pointer-events:none;
+ z-index:-2;
+}
+
+body:before{
+ background:#e50914;
+ top:-180px;
+ left:-180px;
+ animation:orb1 14s ease-in-out infinite alternate;
+}
+
+body:after{
+ background:#5d36ff;
+ right:-180px;
+ bottom:-180px;
+ animation:orb2 17s ease-in-out infinite alternate;
+}
+
+@keyframes orb1{
+ from{transform:translate(0,0)}
+ to{transform:translate(180px,130px)}
+}
+
+@keyframes orb2{
+ from{transform:translate(0,0)}
+ to{transform:translate(-150px,-100px)}
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+ position:fixed;
+ top:0;
+ left:0;
+ right:0;
+ height:74px;
+ padding:0 5%;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ z-index:1000;
+ background:linear-gradient(to bottom,#030304e8,transparent);
+ transition:.35s;
+}
+
+.header.scrolled{
+ background:#070709e8;
+ border-bottom:1px solid var(--line);
+ backdrop-filter:blur(22px);
+}
+
+.brand{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ text-decoration:none;
+ color:white;
+}
+
+.logo-mark{
+ width:39px;
+ height:39px;
+ border-radius:12px;
+ position:relative;
+ display:grid;
+ place-items:center;
+ background:
+ linear-gradient(145deg,#ff2430,#8c0008);
+ box-shadow:
+ 0 0 22px #e5091455,
+ inset 0 1px 1px #ffffff55;
+ transform:rotate(-3deg);
+ overflow:hidden;
+}
+
+.logo-mark:before{
+ content:"";
+ position:absolute;
+ width:65px;
+ height:12px;
+ background:#ffffff25;
+ transform:rotate(-45deg);
+ animation:logoShine 4s linear infinite;
+}
+
+@keyframes logoShine{
+ 0%{left:-80px}
+ 55%,100%{left:60px}
+}
+
+.logo-mark svg{
+ width:21px;
+ height:21px;
+ fill:white;
+ position:relative;
+ z-index:2;
+ transform:rotate(3deg);
+}
+
+.logo-text{
+ font-size:25px;
+ font-weight:950;
+ letter-spacing:-1.3px;
+}
+
+.logo-text span{
+ color:var(--red);
+}
+
+.nav{
+ display:flex;
+ align-items:center;
+ gap:28px;
+}
+
+.nav a{
+ color:#92929a;
+ text-decoration:none;
+ font-size:14px;
+ font-weight:600;
+ transition:.2s;
+}
+
+.nav a:hover,
+.nav a.active{
+ color:white;
+}
+
+.header-actions{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+
+.search-btn,
+.profile-btn{
+ border:0;
+ color:white;
+ cursor:pointer;
+}
+
+.search-btn{
+ width:41px;
+ height:41px;
+ border-radius:50%;
+ background:#ffffff0c;
+ border:1px solid #ffffff0e;
+ font-size:21px;
+}
+
+.profile-btn{
+ width:36px;
+ height:36px;
+ border-radius:50%;
+ background:linear-gradient(135deg,#e50914,#720007);
+ font-weight:bold;
+ box-shadow:0 0 18px #e5091435;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+ height:92vh;
+ min-height:650px;
+ position:relative;
+ display:flex;
+ align-items:center;
+ padding:0 5%;
+ overflow:hidden;
+}
+
+.hero-bg{
+ position:absolute;
+ inset:-4%;
+ background:
+ linear-gradient(90deg,
+  #050507 0%,
+  #050507e8 25%,
+  #0505075c 62%,
+  #050507d8 100%
+ ),
+ linear-gradient(to top,
+  #050507 0%,
+  transparent 48%
+ ),
+ url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=2200&q=90")
+ center/cover;
+ animation:cinemaMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes cinemaMove{
+ from{
+  transform:scale(1);
+  background-position:center center;
+ }
+ to{
+  transform:scale(1.075);
+  background-position:54% 47%;
+ }
+}
+
+.hero:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+ radial-gradient(circle at 75% 35%,#e5091415,transparent 28%),
+ radial-gradient(circle at 65% 75%,#683cff10,transparent 25%);
+ pointer-events:none;
+}
+
+/* floating cinematic lights */
+
+.light{
+ position:absolute;
+ border-radius:50%;
+ filter:blur(3px);
+ pointer-events:none;
+ opacity:.35;
+ z-index:1;
+}
+
+.light.one{
+ width:5px;
+ height:5px;
+ background:#fff;
+ top:24%;
+ right:23%;
+ animation:float1 7s infinite ease-in-out;
+}
+
+.light.two{
+ width:3px;
+ height:3px;
+ background:#ff303b;
+ top:58%;
+ right:14%;
+ animation:float2 9s infinite ease-in-out;
+}
+
+.light.three{
+ width:4px;
+ height:4px;
+ background:#fff;
+ top:40%;
+ right:38%;
+ animation:float1 11s infinite ease-in-out reverse;
+}
+
+@keyframes float1{
+ 0%,100%{transform:translate(0,0);opacity:.15}
+ 50%{transform:translate(-35px,30px);opacity:.65}
+}
+
+@keyframes float2{
+ 0%,100%{transform:translate(0,0)}
+ 50%{transform:translate(30px,-40px)}
+}
+
+.hero-content{
+ position:relative;
+ z-index:3;
+ max-width:680px;
+ margin-top:55px;
+}
+
+.eyebrow{
+ display:inline-flex;
+ align-items:center;
+ gap:8px;
+ padding:8px 13px;
+ border-radius:999px;
+ background:#e5091418;
+ border:1px solid #e5091445;
+ color:#ff6971;
+ font-size:11px;
+ font-weight:800;
+ letter-spacing:.5px;
+ margin-bottom:19px;
+ backdrop-filter:blur(10px);
+}
+
+.live-dot{
+ width:6px;
+ height:6px;
+ background:#ff2632;
+ border-radius:50%;
+ box-shadow:0 0 10px #ff2632;
+ animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+ 50%{opacity:.35;transform:scale(.7)}
+}
+
+.hero h1{
+ font-size:clamp(54px,7vw,91px);
+ line-height:.87;
+ letter-spacing:-5px;
+ font-weight:950;
+ margin-bottom:22px;
+}
+
+.hero h1 .red{
+ color:var(--red);
+ text-shadow:0 0 35px #e5091435;
+}
+
+.hero-desc{
+ max-width:590px;
+ color:#b4b4bc;
+ font-size:15px;
+ line-height:1.65;
+ margin-bottom:22px;
+}
+
+.meta{
+ display:flex;
+ flex-wrap:wrap;
+ gap:13px;
+ align-items:center;
+ color:#ddd;
+ font-size:13px;
+ margin-bottom:22px;
+}
+
+.meta .rating{
+ color:#ffd54d;
+}
+
+.hero-actions{
+ display:flex;
+ gap:11px;
+}
+
+.btn{
+ border:0;
+ border-radius:8px;
+ padding:14px 22px;
+ font-size:14px;
+ font-weight:800;
+ transition:.25s;
+}
+
+.btn:hover{
+ transform:translateY(-3px);
+}
+
+.btn-primary{
+ color:#050505;
+ background:white;
+ box-shadow:0 8px 30px #0008;
+}
+
+.btn-secondary{
+ color:white;
+ background:#ffffff14;
+ border:1px solid #ffffff1c;
+ backdrop-filter:blur(12px);
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+main{
+ position:relative;
+ z-index:5;
+ margin-top:-80px;
+}
+
+.section{
+ padding:0 5%;
+ margin-bottom:48px;
+}
+
+.section-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:17px;
+}
+
+.section-title{
+ font-size:21px;
+ font-weight:900;
+ letter-spacing:-.4px;
+}
+
+.section-title span{
+ color:var(--red);
+}
+
+.see-all{
+ color:#777;
+ font-size:12px;
+ cursor:pointer;
+}
+
+.row{
+ display:flex;
+ gap:15px;
+ overflow-x:auto;
+ padding:5px 2px 12px;
+ scrollbar-width:none;
+}
+
+.row::-webkit-scrollbar{
+ display:none;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+ flex:0 0 174px;
+ cursor:pointer;
+ transition:.3s;
+}
+
+.card:hover{
+ transform:translateY(-5px);
+}
+
+.poster{
+ width:100%;
+ aspect-ratio:2/3;
+ position:relative;
+ overflow:hidden;
+ border-radius:10px;
+ background:#111;
+ border:1px solid #ffffff0b;
+ box-shadow:0 12px 30px #0008;
+}
+
+.poster img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ transition:.5s;
+}
+
+.card:hover .poster img{
+ transform:scale(1.07);
+}
+
+.poster:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:linear-gradient(to top,#000b,transparent 50%);
+ pointer-events:none;
+}
+
+.rating-badge{
+ position:absolute;
+ top:9px;
+ right:9px;
+ z-index:2;
+ padding:5px 7px;
+ border-radius:5px;
+ background:#000c;
+ color:#fff;
+ font-size:10px;
+ font-weight:bold;
+ backdrop-filter:blur(8px);
+}
+
+.play-overlay{
+ position:absolute;
+ inset:0;
+ z-index:3;
+ display:grid;
+ place-items:center;
+ opacity:0;
+ transition:.3s;
+ background:#0005;
+}
+
+.card:hover .play-overlay{
+ opacity:1;
+}
+
+.play-circle{
+ width:46px;
+ height:46px;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ background:#ffffffe8;
+ color:#000;
+ padding-left:2px;
+}
+
+.card-title{
+ margin-top:9px;
+ font-size:14px;
+ font-weight:800;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+
+.card-meta{
+ margin-top:4px;
+ color:#777;
+ font-size:11px;
+}
+
+/* landscape */
+
+.landscape .card{
+ flex-basis:265px;
+}
+
+.landscape .poster{
+ aspect-ratio:16/9;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search{
+ position:fixed;
+ inset:0;
+ z-index:2500;
+ display:none;
+ padding:90px 5%;
+ overflow:auto;
+ background:#050507f5;
+ backdrop-filter:blur(25px);
+}
+
+.search.active{
+ display:block;
+}
+
+.search-bar{
+ max-width:900px;
+ margin:auto;
+ display:flex;
+ gap:10px;
+}
+
+.search-input{
+ flex:1;
+ padding:17px 20px;
+ border-radius:11px;
+ border:1px solid #ffffff16;
+ background:#121216;
+ color:white;
+ outline:none;
+}
+
+.close-btn{
+ width:45px;
+ height:45px;
+ border:0;
+ border-radius:50%;
+ background:#ffffff12;
+ color:white;
+ font-size:27px;
+}
+
+.search-results{
+ max-width:1100px;
+ margin:30px auto;
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+ gap:22px;
+}
+
+.result{
+ cursor:pointer;
+}
+
+.result img{
+ width:100%;
+ aspect-ratio:2/3;
+ object-fit:cover;
+ border-radius:9px;
+}
+
+.result-title{
+ margin-top:7px;
+ font-size:13px;
+ font-weight:bold;
+}
+
+/* =========================
+   PLAYER
+========================= */
+
+.player{
+ position:fixed;
+ inset:0;
+ z-index:4000;
+ background:#000;
+ display:none;
+}
+
+.player.active{
+ display:block;
+}
+
+.player-top{
+ position:absolute;
+ top:0;
+ left:0;
+ right:0;
+ height:80px;
+ z-index:5;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 24px;
+ background:linear-gradient(#000d,transparent);
+}
+
+.player-brand{
+ font-size:22px;
+ font-weight:950;
+}
+
+.player-brand span{
+ color:var(--red);
+}
+
+.player-close{
+ width:43px;
+ height:43px;
+ border:0;
+ border-radius:50%;
+ background:#000a;
+ color:white;
+ font-size:27px;
+ cursor:pointer;
+}
+
+.video-area{
+ width:100%;
+ height:100%;
+ display:grid;
+ place-items:center;
+}
+
+.video-area video{
+ width:100%;
+ height:100%;
+ object-fit:contain;
+ background:#000;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+.mobile-nav{
+ display:none;
+}
+
+@media(max-width:800px){
+
+ .header{
+  height:61px;
+  padding:0 17px;
+ }
+
+ .logo-mark{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+ }
+
+ .logo-text{
+  font-size:21px;
+ }
+
+ .nav{
+  display:none;
+ }
+
+ .profile-btn{
+  display:none;
+ }
+
+ .hero{
+  height:77vh;
+  min-height:570px;
+  padding:0 18px 90px;
+  align-items:flex-end;
+ }
+
+ .hero-bg{
+  background:
+  linear-gradient(to top,#050507 0%,#05050718 60%),
+  url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1300&q=90")
+  center/cover;
+ }
+
+ .hero-content{
+  margin:0;
+ }
+
+ .hero h1{
+  font-size:51px;
+  letter-spacing:-3px;
+ }
+
+ .hero-desc{
+  font-size:13px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+ }
+
+ .meta{
+  gap:9px;
+  font-size:11px;
+ }
+
+ .btn{
+  padding:12px 17px;
+  font-size:12px;
+ }
+
+ main{
+  margin-top:-38px;
+ }
+
+ .section{
+  padding:0 17px;
+  margin-bottom:37px;
+ }
+
+ .section-title{
+  font-size:18px;
+ }
+
+ .card{
+  flex-basis:133px;
+ }
+
+ .landscape .card{
+  flex-basis:225px;
+ }
+
+ .mobile-nav{
+  position:fixed;
+  display:flex;
+  left:0;
+  right:0;
+  bottom:0;
+  height:66px;
+  z-index:1500;
+  align-items:center;
+  justify-content:space-around;
+  background:#08080af2;
+  border-top:1px solid #ffffff10;
+  backdrop-filter:blur(20px);
+ }
+
+ .mobile-nav-item{
+  color:#777;
+  font-size:10px;
+  text-align:center;
+ }
+
+ .mobile-nav-item.active{
+  color:white;
+ }
+
+ .mobile-nav-icon{
+  display:block;
+  font-size:20px;
+  margin-bottom:3px;
+ }
+
+ .search{
+  padding:78px 17px 30px;
+ }
+
+ .player-top{
+  padding:0 15px;
+ }
+
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+ width:6px;
+ height:6px;
+}
+
+::-webkit-scrollbar-thumb{
+ background:#25252b;
+ border-radius:20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header" id="header">
+
+ <a class="brand" href="#">
+
+  <div class="logo-mark">
+
+   <svg viewBox="0 0 24 24">
+    <path d="M8 5.5v13L19 12 8 5.5z"/>
+   </svg>
+
+  </div>
+
+  <div class="logo-text">
+   Lihat<span>Yuk</span>
+  </div>
+
+ </a>
+
+ <nav class="nav">
+
+  <a href="#" class="active">Home</a>
+  <a href="#film">Film</a>
+  <a href="#series">Series</a>
+  <a href="#popular">Populer</a>
+
+ </nav>
+
+ <div class="header-actions">
+
+  <button
+   class="search-btn"
+   onclick="openSearch()">
+   ⌕
+  </button>
+
+  <button class="profile-btn">
+   E
+  </button>
+
+ </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+ <div class="hero-bg"></div>
+
+ <div class="light one"></div>
+ <div class="light two"></div>
+ <div class="light three"></div>
+
+ <div class="hero-content">
+
+  <div class="eyebrow">
+   <span class="live-dot"></span>
+   PILIHAN UTAMA LIHATYUK
+  </div>
+
+  <h1>
+   WATCH.<br>
+   RELAX.<br>
+   <span class="red">ENJOY.</span>
+  </h1>
+
+  <div class="meta">
+   <span>2026</span>
+   <span>•</span>
+   <span>13+</span>
+   <span>•</span>
+   <span>2j 08m</span>
+   <span>•</span>
+   <span class="rating">★ 9.1</span>
+  </div>
+
+  <p class="hero-desc">
+   Nikmati film dan series pilihan dalam satu
+   tempat dengan pengalaman streaming yang
+   modern, cinematic, cepat, dan nyaman.
+  </p>
+
+  <div class="hero-actions">
+
+   <button
+    class="btn btn-primary"
+    onclick="openPlayer()">
+    ▶ Mulai Nonton
+   </button>
+
+   <button
+    class="btn btn-secondary"
+    onclick="showMessage('Daftar Saya akan tersedia setelah sistem akun aktif.')">
+    ＋ Daftar Saya
+   </button>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<main>
+
+<!-- TRENDING -->
+
+<section
+ class="section"
+ id="popular">
+
+ <div class="section-head">
+
+  <div class="section-title">
+   Sedang <span>Trending</span> 🔥
+  </div>
+
+  <div class="see-all">
+   Lihat semua
+  </div>
+
+ </div>
+
+ <div
+  class="row"
+  id="trendingRow">
+ </div>
+
+</section>
+
+
+<!-- FEATURED -->
+
+<section class="section">
+
+ <div class="section-head">
+
+  <div class="section-title">
+   Pilihan Untukmu
+  </div>
+
+ </div>
+
+ <div
+  class="row landscape"
+  id="featuredRow">
+ </div>
+
+</section>
+
+
+<!-- FILM -->
+
+<section
+ class="section"
+ id="film">
+
+ <div class="section-head">
+
+  <div class="section-title">
+   Film Terbaru 🎬
+  </div>
+
+  <div class="see-all">
+   Lihat semua
+  </div>
+
+ </div>
+
+ <div
+  class="row"
+  id="filmRow">
+ </div>
+
+</section>
+
+
+<!-- SERIES -->
+
+<section
+ class="section"
+ id="series">
+
+ <div class="section-head">
+
+  <div class="section-title">
+   Series Pilihan
+  </div>
+
+ </div>
+
+ <div
+  class="row landscape"
+  id="seriesRow">
+ </div>
+
+</section>
+
+</main>
+
+
+<footer style="
+ padding:40px 5% 100px;
+ text-align:center;
+ color:#555;
+ font-size:12px;
+">
+ © 2026 LihatYuk
+</footer>
+
+
+<!-- SEARCH -->
+
+<div
+ class="search"
+ id="search">
+
+ <div class="search-bar">
+
+  <input
+   id="searchInput"
+   class="search-input"
+   placeholder="Cari film atau series..."
+   autocomplete="off">
+
+  <button
+   class="close-btn"
+   onclick="closeSearch()">
+   ×
+  </button>
+
+ </div>
+
+ <div
+  class="search-results"
+  id="searchResults">
+ </div>
+
+</div>
+
+
+<!-- PLAYER -->
+
+<div
+ class="player"
+ id="player">
+
+ <div class="player-top">
+
+  <div class="player-brand">
+   Lihat<span>Yuk</span>
+  </div>
+
+  <button
+   class="player-close"
+   onclick="closePlayer()">
+   ×
+  </button>
+
+ </div>
+
+ <div class="video-area">
+
+  <video
+   id="videoPlayer"
+   controls
+   playsinline
+   preload="metadata">
+  </video>
+
+ </div>
+
+</div>
+
+
+<!-- MOBILE NAV -->
+
+<div class="mobile-nav">
+
+ <div
+  class="mobile-nav-item active"
+  onclick="window.scrollTo({top:0,behavior:'smooth'})">
+
+  <span class="mobile-nav-icon">⌂</span>
+  Home
+
+ </div>
+
+ <div
+  class="mobile-nav-item"
+  onclick="scrollToSection('film')">
+
+  <span class="mobile-nav-icon">🎬</span>
+  Film
+
+ </div>
+
+ <div
+  class="mobile-nav-item"
+  onclick="scrollToSection('series')">
+
+  <span class="mobile-nav-icon">▣</span>
+  Series
+
+ </div>
+
+ <div
+  class="mobile-nav-item"
+  onclick="openSearch()">
+
+  <span class="mobile-nav-icon">⌕</span>
+  Cari
+
+ </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   DATA DEMO
+   NANTI DIGANTI DENGAN D1
+========================================= */
+
+const CONTENT=[
+
+ {
+  id:1,
+  title:"The Last Journey",
+  poster:"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Action",
+  rating:"8.9",
+  type:"movie"
+ },
+
+ {
+  id:2,
+  title:"Dark Horizon",
+  poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Thriller",
+  rating:"8.7",
+  type:"movie"
+ },
+
+ {
+  id:3,
+  title:"Lost Paradise",
+  poster:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2025,
+  genre:"Drama",
+  rating:"8.5",
+  type:"movie"
+ },
+
+ {
+  id:4,
+  title:"No Escape",
+  poster:"https://images.unsplash.com/photo-1533920379810-6bedac961555?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Action",
+  rating:"8.4",
+  type:"movie"
+ },
+
+ {
+  id:5,
+  title:"The Kingdom",
+  poster:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Fantasy",
+  rating:"8.2",
+  type:"movie"
+ },
+
+ {
+  id:6,
+  title:"Cinema Night",
+  poster:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1000&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Movie",
+  rating:"9.0",
+  type:"featured"
+ },
+
+ {
+  id:7,
+  title:"The Unknown",
+  poster:"https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1000&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Mystery",
+  rating:"8.8",
+  type:"featured"
+ },
+
+ {
+  id:8,
+  title:"Beyond Earth",
+  poster:"https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1000&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Sci-Fi",
+  rating:"8.6",
+  type:"featured"
+ },
+
+ {
+  id:9,
+  title:"Midnight City",
+  poster:"https://images.unsplash.com/photo-1513106580091-1d82408b8cd6?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Crime",
+  rating:"8.1",
+  type:"movie"
+ },
+
+ {
+  id:10,
+  title:"After Tomorrow",
+  poster:"https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=700&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Sci-Fi",
+  rating:"8.0",
+  type:"movie"
+ },
+
+ {
+  id:11,
+  title:"Black City",
+  poster:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf?auto=format&fit=crop&w=1000&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Series • Season 2",
+  rating:"8.7",
+  type:"series"
+ },
+
+ {
+  id:12,
+  title:"Last Kingdom",
+  poster:"https://images.unsplash.com/photo-1487180144351-b8472da7d491?auto=format&fit=crop&w=1000&q=85",
+  video_url:"",
+  year:2026,
+  genre:"Series • Season 1",
+  rating:"8.5",
+  type:"series"
+ }
+
+];
+
+
+/* =========================================
+   CREATE CARD
+========================================= */
+
+function createCard(item){
+
+ return `
+ <div
+  class="card"
+  onclick="selectContent(${item.id})">
+
+  <div class="poster">
+
+   <img
+    src="${item.poster}"
+    alt="${escapeHTML(item.title)}"
+    loading="lazy">
+
+   <div class="rating-badge">
+    ★ ${item.rating}
+   </div>
+
+   <div class="play-overlay">
+
+    <div class="play-circle">
+     ▶
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="card-title">
+   ${escapeHTML(item.title)}
+  </div>
+
+  <div class="card-meta">
+   ${item.year} • ${escapeHTML(item.genre)}
+  </div>
+
+ </div>
+ `;
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function render(){
+
+ document.getElementById("trendingRow").innerHTML=
+ CONTENT
+ .filter(x=>x.type==="movie")
+ .slice(0,5)
+ .map(createCard)
+ .join("");
+
+ document.getElementById("featuredRow").innerHTML=
+ CONTENT
+ .filter(x=>x.type==="featured")
+ .map(createCard)
+ .join("");
+
+ document.getElementById("filmRow").innerHTML=
+ CONTENT
+ .filter(x=>x.type==="movie")
+ .slice(5)
+ .map(createCard)
+ .join("");
+
+ document.getElementById("seriesRow").innerHTML=
+ CONTENT
+ .filter(x=>x.type==="series")
+ .map(createCard)
+ .join("");
+
+}
+
+
+/* =========================================
+   PLAYER
+========================================= */
+
+function selectContent(id){
+
+ const item=CONTENT.find(x=>x.id===id);
+
+ if(!item)return;
+
+ if(item.video_url){
+
+  openPlayer(item.video_url);
+
+ }else{
+
+  showMessage(
+   "Video untuk konten ini belum diisi."
+  );
+
+ }
+
+}
+
+
+function openPlayer(url=""){
+
+ const player=
+  document.getElementById("player");
+
+ const video=
+  document.getElementById("videoPlayer");
+
+ player.classList.add("active");
+
+ document.body.style.overflow="hidden";
+
+ if(url){
+
+  video.src=url;
+
+  video.play().catch(()=>{});
+
+ }
+
+}
+
+
+function closePlayer(){
+
+ const player=
+  document.getElementById("player");
+
+ const video=
+  document.getElementById("videoPlayer");
+
+ video.pause();
+
+ video.removeAttribute("src");
+
+ video.load();
+
+ player.classList.remove("active");
+
+ document.body.style.overflow="";
+
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+function openSearch(){
+
+ document
+ .getElementById("search")
+ .classList
+ .add("active");
+
+ setTimeout(()=>{
+  document
+  .getElementById("searchInput")
+  .focus();
+ },100);
+
+}
+
+
+function closeSearch(){
+
+ document
+ .getElementById("search")
+ .classList
+ .remove("active");
+
+ document
+ .getElementById("searchInput")
+ .value="";
+
+ document
+ .getElementById("searchResults")
+ .innerHTML="";
+
+}
+
+
+document
+.getElementById("searchInput")
+.addEventListener("input",function(){
+
+ const q=this.value
+ .toLowerCase()
+ .trim();
+
+ const results=
+ document.getElementById("searchResults");
+
+ if(!q){
+
+  results.innerHTML="";
+  return;
+
+ }
+
+ const found=
+ CONTENT.filter(item=>
+  (item.title+" "+item.genre)
+  .toLowerCase()
+  .includes(q)
+ );
+
+ if(!found.length){
+
+  results.innerHTML=`
+   <div style="
+    grid-column:1/-1;
+    text-align:center;
+    color:#777;
+    padding:60px 10px;
+   ">
+    Konten tidak ditemukan.
+   </div>
+  `;
+
+  return;
+ }
+
+ results.innerHTML=
+ found.map(item=>`
+
+  <div
+   class="result"
+   onclick="
+    closeSearch();
+    selectContent(${item.id});
+   ">
+
+   <img
+    src="${item.poster}"
+    alt="${escapeHTML(item.title)}">
+
+   <div class="result-title">
+    ${escapeHTML(item.title)}
+   </div>
+
+  </div>
+
+ `).join("");
+
+});
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+window.addEventListener("scroll",()=>{
+
+ document
+ .getElementById("header")
+ .classList
+ .toggle(
+  "scrolled",
+  window.scrollY>40
+ );
+
+});
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+function scrollToSection(id){
+
+ const el=
+ document.getElementById(id);
+
+ if(el){
+
+  el.scrollIntoView({
+   behavior:"smooth"
+  });
+
+ }
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text){
+
+ const old=document.getElementById("message");
+
+ if(old)old.remove();
+
+ const box=document.createElement("div");
+
+ box.id="message";
+
+ box.textContent=text;
+
+ box.style.cssText=`
+  position:fixed;
+  left:50%;
+  bottom:85px;
+  transform:translateX(-50%);
+  z-index:5000;
+  background:#fff;
+  color:#000;
+  padding:12px 18px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:bold;
+  box-shadow:0 10px 35px #0008;
+ `;
+
+ document.body.appendChild(box);
+
+ setTimeout(()=>{
+  box.remove();
+ },2600);
+
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function escapeHTML(text){
+
+ return String(text)
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
+   ESC
+========================================= */
+
+document.addEventListener("keydown",e=>{
+
+ if(e.key==="Escape"){
+
+  closePlayer();
+  closeSearch();
+
+ }
+
+});
+
+
+/* =========================================
+   START
+========================================= */
+
+render();
+
+</script>
+
+</body>
+</html>
