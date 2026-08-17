@@ -1,0 +1,8 @@
+{
+  "name": "lihatyuk",
+  "main": "lihatyuk-worker.js",
+  "compatibility_date": "2026-08-17",
+  "assets": {
+    "directory": "."
+  }
+}
